@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NuGet.Assembly": {
+      "commandName": "Project",
+      "commandLineArgs": "test newtonsoft.json 12.0.1"
+    }
+  }
+}
