@@ -40,7 +40,7 @@ namespace NuGet.Assembly.Functions
                 await _extractor.ExtractAsync(packageStream, cancellationToken);
             }
 
-            log.LogInformation($"C# ServiceBus queue trigger function processed message: {packageUrl}");
+            log.LogInformation("Finished processing {PackageUrl}", packageUrl);
         }
 
         private async Task<Stream> GetPackageStreamOrNullAsync(string packageUrl, CancellationToken cancellationToken)
