@@ -15,6 +15,7 @@ namespace NuGet.Assembly
         {            
             services.AddSingleton<IAssemblyStore, AssemblyBlobStore>();
             services.AddSingleton<PackageExtractor>();
+            services.AddSingleton<QueuePackageUrls>();
 
             services.AddSingleton(provider =>
             {
@@ -30,6 +31,7 @@ namespace NuGet.Assembly
                     provider.GetRequiredService<HttpClient>(),
                     "https://api.nuget.org/v3/index.json");
             });
+
 
             services.AddSingleton<IQueueClient>(provider =>
             {

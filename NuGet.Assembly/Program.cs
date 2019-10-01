@@ -37,6 +37,7 @@ namespace NuGet.Assembly
 
                         services.AddSingleton<ExtractCommand>();
                         services.AddSingleton<QueueCommand>();
+                        services.AddSingleton<QueueAllCommand>();
 
                         services.Configure<Configuration>(ctx.Configuration);
 

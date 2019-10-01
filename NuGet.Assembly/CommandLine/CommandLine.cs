@@ -28,6 +28,7 @@ namespace NuGet.Assembly
 
             rootCommand.Add(BuildExtractCommand());
             rootCommand.Add(BuildQueueCommand());
+            rootCommand.Add(BuildQueueAllCommand());
 
             return rootCommand;
         }
@@ -46,20 +47,33 @@ namespace NuGet.Assembly
                 }
             };
 
-            command.Handler = CommandHandler.Create<IHost, string, NuGetVersion, DirectoryInfo, CancellationToken>(TestAsync);
+            command.Handler = CommandHandler.Create<IHost, string, NuGetVersion, DirectoryInfo, CancellationToken>(ExtractAsync);
 
             return command;
         }
 
         private static Command BuildQueueCommand()
         {
-            return new Command("queue", "Add NuGet package URLs to the queue")
+            var command = new Command("queue", "Add a single NuGet package to the queue")
             {
-                Handler = CommandHandler.Create<IHost, bool, CancellationToken>(QueueAsync)
+                new Argument<string>("package-id"),
+                new Argument<NuGetVersion>("package-version"),
+            };
+
+            command.Handler = CommandHandler.Create<IHost, string, NuGetVersion, CancellationToken>(QueueAsync);
+
+            return command;
+        }
+
+        private static Command BuildQueueAllCommand()
+        {
+            return new Command("queue-all", "Add all NuGet package URLs to the queue")
+            {
+                Handler = CommandHandler.Create<IHost, bool, CancellationToken>(QueueAllAsync)
             };
         }
 
-        private static async Task TestAsync(
+        private static async Task ExtractAsync(
             IHost host,
             string packageId,
             NuGetVersion packageVersion,
@@ -72,11 +86,23 @@ namespace NuGet.Assembly
                 .ExtractAsync(packageId, packageVersion, output, cancellationToken);
         }
 
-        private static async Task QueueAsync(IHost host, bool enqueue, CancellationToken cancellationToken)
+        private static async Task QueueAsync(
+            IHost host,
+            string packageId,
+            NuGetVersion packageVersion,
+            CancellationToken cancellationToken)
         {
             await host
                 .Services
                 .GetRequiredService<QueueCommand>()
+                .QueueAsync(packageId, packageVersion, cancellationToken);
+        }
+
+        private static async Task QueueAllAsync(IHost host, bool enqueue, CancellationToken cancellationToken)
+        {
+            await host
+                .Services
+                .GetRequiredService<QueueAllCommand>()
                 .RunAsync(cancellationToken);
         }
     }
