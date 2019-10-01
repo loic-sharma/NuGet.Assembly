@@ -8,6 +8,8 @@ Extract Newtonsoft.Json to disk:
 dotnet NuGet.Assembly.dll extract Newtonsoft.Json 12.0.1
 ```
 
+The files' names are the hex-encoded SHA-512 hash of the files' contents.
+
 ## Running on Azure
 
 First, setup the Azure resources:
@@ -35,4 +37,4 @@ Or, you can queue all packages:
 dotnet NuGet.Assembly.dll queue-all
 ```
 
-Enqueueing all NuGet.org packages should take ~20 minutes. The Azure Function should be able to process all packages in a few hours.
+Enqueueing all NuGet.org packages should take ~20 minutes. The Azure Function should be able to process all packages in a few hours on the consumption plan.
